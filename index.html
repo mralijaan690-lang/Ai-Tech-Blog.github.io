@@ -1,0 +1,1802 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Bloggers Hub | Latest AI Tools & Technology Insights</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #6366f1;
+            --secondary: #10b981;
+            --accent: #f59e0b;
+            --danger: #ef4444;
+            --dark: #1f2937;
+            --darker: #111827;
+            --light: #f8fafc;
+            --gray: #6b7280;
+            --gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --gradient-2: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: #f5f6fa;
+            color: var(--dark);
+            line-height: 1.6;
+        }
+
+        /* Header Styles */
+        header {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+            padding: 1rem 0;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        header.scrolled {
+            background: rgba(255, 255, 255, 0.98);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            padding: 0.7rem 0;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .nav-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 2rem;
+            font-weight: 800;
+            background: var(--gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .logo i {
+            background: var(--gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: float 3s ease-in-out infinite;
+        }
+
+        @keyframes float {
+
+            0%,
+            100% {
+                transform: translateY(0);
+            }
+
+            50% {
+                transform: translateY(-5px);
+            }
+        }
+
+        .nav-menu {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+            align-items: center;
+        }
+
+        .nav-menu li a {
+            color: var(--dark);
+            text-decoration: none;
+            font-weight: 600;
+            padding: 0.5rem 1rem;
+            border-radius: 25px;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .nav-menu li a:hover {
+            color: var(--primary);
+            background: rgba(99, 102, 241, 0.1);
+        }
+
+        .nav-menu li a.active {
+            background: var(--gradient);
+            color: white;
+        }
+
+        .nav-cta {
+            background: var(--gradient);
+            color: white !important;
+            padding: 0.7rem 1.5rem !important;
+            border-radius: 25px;
+            box-shadow: 0 5px 15px rgba(99, 102, 241, 0.3);
+            transition: all 0.3s ease !important;
+        }
+
+        .nav-cta:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(99, 102, 241, 0.4);
+        }
+
+        .menu-toggle {
+            display: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            width: 55px;
+            text-align: center;
+            color: white;
+            background: #6366f1;
+            padding: 0.5rem;
+            border-radius: 8px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Animated Hero Section */
+        .hero {
+            background: var(--gradient);
+            color: white;
+            padding: 8rem 0px 2rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 1000"><polygon fill="rgba(255,255,255,0.05)" points="0,1000 1000,0 1000,1000"/></svg>');
+            animation: morph 20s ease-in-out infinite;
+        }
+
+        @keyframes morph {
+
+            0%,
+            100% {
+                transform: scale(1) rotate(0deg);
+            }
+
+            50% {
+                transform: scale(1.1) rotate(180deg);
+            }
+        }
+
+        .hero-content {
+            text-align: center;
+            position: relative;
+            z-index: 2;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .hero h1 {
+            font-size: 4rem;
+            font-weight: 800;
+            margin-bottom: 1.5rem;
+            line-height: 1.2;
+            animation: slideUp 1s ease;
+        }
+
+        .hero p {
+            font-size: 1.3rem;
+            margin-bottom: 2.5rem;
+            opacity: 0.9;
+            animation: slideUp 1s ease 0.2s both;
+        }
+
+        .hero-buttons {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            animation: slideUp 1s ease 0.4s both;
+        }
+
+        .btn {
+            padding: 1rem 2rem;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            border: none;
+            cursor: pointer;
+            font-size: 1rem;
+        }
+
+        .btn-primary {
+            background: white;
+            color: var(--primary);
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        }
+
+        .btn-secondary {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            backdrop-filter: blur(10px);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: translateY(-3px);
+        }
+
+        /* Animated Stats */
+        .stats {
+            background: white;
+            padding: 4rem 0;
+            border-radius: 30px;
+            margin-top: -60px;
+            position: relative;
+            z-index: 3;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.1);
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
+            text-align: center;
+        }
+
+        .stat-item {
+            padding: 2rem;
+        }
+
+        .stat-number {
+            font-size: 3rem;
+            font-weight: 800;
+            background: var(--gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-label {
+            color: var(--gray);
+            font-weight: 600;
+        }
+
+        /* Premium Blog Grid */
+        .section-title {
+            text-align: center;
+            margin: 6rem 0 4rem;
+            position: relative;
+        }
+
+        .section-title h2 {
+            font-size: 3rem;
+            font-weight: 800;
+            background: var(--gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 1rem;
+        }
+
+        .section-title p {
+            font-size: 1.2rem;
+            color: var(--gray);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .blog-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2.5rem;
+            margin-bottom: 5rem;
+        }
+
+        .blog-card {
+            background: white;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+            transition: all 0.4s ease;
+            position: relative;
+        }
+
+        .blog-card:hover {
+            transform: translateY(-15px);
+            box-shadow: 0 25px 60px rgba(0, 0, 0, 0.15);
+        }
+
+        .blog-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 5px;
+            background: var(--gradient);
+            z-index: 2;
+        }
+
+        .blog-image {
+            height: 220px;
+            width: 100%;
+            object-fit: cover;
+            transition: transform 0.4s ease;
+        }
+
+        .blog-card:hover .blog-image {
+            transform: scale(1.05);
+        }
+
+        .blog-content {
+            padding: 2rem;
+            position: relative;
+        }
+
+        .blog-category {
+            display: inline-block;
+            background: var(--gradient);
+            color: white;
+            padding: 0.5rem 1.2rem;
+            border-radius: 25px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .blog-title {
+            font-size: 1.4rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            line-height: 1.4;
+            color: var(--darker);
+        }
+
+        .blog-meta {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1rem;
+            font-size: 0.9rem;
+            color: var(--gray);
+        }
+
+        .blog-meta span {
+            display: flex;
+            align-items: center;
+            gap: 0.3rem;
+        }
+
+        .blog-excerpt {
+            color: var(--gray);
+            margin-bottom: 1.5rem;
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .read-more {
+            color: var(--primary);
+            font-weight: 600;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: all 0.3s ease;
+        }
+
+        .read-more:hover {
+            gap: 1rem;
+            color: var(--primary-dark);
+        }
+
+        /* Animated Tools Scroll */
+        .tools-section {
+            background: #0232e9;
+            padding: 5rem 0;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .tools-scroll {
+            display: flex;
+            animation: scroll 40s linear infinite;
+            gap: 4rem;
+            padding: 2rem 0;
+        }
+
+        .tool-item {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            background: rgba(255, 255, 255, 0.1);
+            padding: 1rem 2rem;
+            border-radius: 15px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            transition: all 0.3s ease;
+            min-width: 250px;
+        }
+
+        .tool-item:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateY(-5px);
+        }
+
+        .tool-item img {
+            height: 40px;
+            width: 40px;
+            border-radius: 10px;
+            object-fit: cover;
+        }
+
+        .tool-item span {
+            color: white;
+            font-weight: 600;
+            font-size: 1.1rem;
+        }
+
+        @keyframes scroll {
+            0% {
+                transform: translateX(0);
+            }
+
+            100% {
+                transform: translateX(calc(-250px * 8 - 4rem * 8));
+            }
+        }
+
+        /* Premium Reviews */
+        .reviews {
+            padding: 6rem 0;
+            background: var(--light);
+        }
+
+        .review-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2rem;
+        }
+
+        .review-card {
+            background: white;
+            padding: 2.5rem;
+            border-radius: 20px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.08);
+            transition: all 0.3s ease;
+            position: relative;
+            border: 1px solid rgba(0, 0, 0, 0.05);
+        }
+
+        .review-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.15);
+        }
+
+        .review-card::before {
+            content: '"';
+            font-size: 6rem;
+            color: var(--primary);
+            opacity: 0.1;
+            position: absolute;
+            top: 1rem;
+            right: 2rem;
+            line-height: 1;
+        }
+
+        .reviewer-info {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .reviewer-img {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 3px solid var(--primary);
+        }
+
+        .reviewer-details h4 {
+            font-weight: 700;
+            color: var(--darker);
+            margin-bottom: 0.3rem;
+        }
+
+        .reviewer-details p {
+            color: var(--gray);
+            font-size: 0.9rem;
+        }
+
+        .review-text {
+            color: var(--dark);
+            font-style: italic;
+            line-height: 1.8;
+            position: relative;
+            z-index: 2;
+        }
+
+        .rating {
+            color: var(--accent);
+            margin-top: 1rem;
+        }
+
+        /* Premium Footer */
+        footer {
+            background: linear-gradient(135deg, #1e1e36 0%, #16213e 50%, #0f3c74 100%);
+            color: white;
+            padding: 5rem 0 2rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .footer-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr 1.5fr;
+            gap: 3rem;
+            margin-bottom: 3rem;
+        }
+
+        .footer-column h3 {
+            font-size: 1.3rem;
+            margin-bottom: 1.5rem;
+            position: relative;
+            padding-bottom: 0.5rem;
+        }
+
+        .footer-column h3::after {
+            content: '';
+            position: absolute;
+            left: 0;
+            bottom: 0;
+            width: 40px;
+            height: 3px;
+            background: var(--gradient);
+            border-radius: 2px;
+        }
+
+        .footer-links {
+            list-style: none;
+        }
+
+        .footer-links li {
+            margin-bottom: 0.8rem;
+        }
+
+        .footer-links a {
+            color: #9ca3af;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .footer-links a:hover {
+            color: white;
+            gap: 1rem;
+        }
+
+        .social-links {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+
+        .social-links a {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 45px;
+            height: 45px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            color: white;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+        }
+
+        .social-links a:hover {
+            background: var(--gradient);
+            transform: translateY(-3px);
+        }
+
+        .newsletter input {
+            width: 100%;
+            padding: 1rem;
+            border: none;
+            border-radius: 12px;
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            margin-bottom: 1rem;
+            backdrop-filter: blur(10px);
+        }
+
+        .newsletter input::placeholder {
+            color: #9ca3af;
+        }
+
+        .copyright {
+            text-align: center;
+            padding-top: 3rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            color: #9ca3af;
+            font-size: 0.9rem;
+        }
+
+        /* Mobile Responsive */
+        @media (max-width: 1024px) {
+            .footer-grid {
+                grid-template-columns: 1fr 1fr;
+                gap: 2rem;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .menu-toggle {
+                display: block;
+            }
+
+            .nav-menu {
+                position: fixed;
+                top: 80px;
+                left: -100%;
+                flex-direction: column;
+                background: white;
+                width: 90%;
+                margin: 0 5%;
+                text-align: center;
+                transition: 0.4s ease;
+                box-shadow: 0 20px 60px rgba(0, 0, 0, 0.2);
+                border-radius: 20px;
+                padding: 2rem;
+                gap: 1rem;
+            }
+
+            .nav-menu.active {
+                left: 0;
+            }
+
+            .nav-menu li {
+                width: 100%;
+            }
+
+            .nav-menu li a {
+                display: block;
+                padding: 1rem;
+                border-radius: 12px;
+            }
+
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+
+            .hero p {
+                font-size: 1.1rem;
+            }
+
+            .hero-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .btn {
+                width: 100%;
+                max-width: 300px;
+                justify-content: center;
+            }
+
+            .section-title h2 {
+                font-size: 2.2rem;
+            }
+
+            .blog-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .footer-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .hero {
+                padding: 10rem 0 6rem;
+            }
+
+            .hero h1 {
+                font-size: 2rem;
+            }
+        }
+
+        /* Animations */
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .fade-in {
+            animation: slideUp 0.8s ease both;
+        }
+
+        /* Loading State */
+        .loading {
+            text-align: center;
+            padding: 60px 30px;
+            color: var(--gray);
+            grid-column: 1 / -1;
+        }
+
+        .loading i {
+            font-size: 3rem;
+            margin-bottom: 20px;
+            display: block;
+            color: var(--accent);
+        }
+
+        .loading-text {
+            font-size: 1.2rem;
+            font-weight: 500;
+        }
+
+        .no-posts {
+            text-align: center;
+            padding: 80px 30px;
+            color: var(--gray);
+            grid-column: 1 / -1;
+        }
+
+        .no-posts i {
+            font-size: 4rem;
+            margin-bottom: 20px;
+            display: block;
+            color: var(--accent);
+        }
+
+        .no-posts h3 {
+            font-size: 1.8rem;
+            margin-bottom: 15px;
+            color: var(--primary);
+        }
+
+        /* Read More Dropdown Styles */
+        .read-more-section {
+            margin-top: 1rem;
+        }
+
+        .read-more-btn,
+        .show-less-btn {
+            background: var(--gradient);
+            color: white;
+            border: none;
+            padding: 0.8rem 1.5rem;
+            border-radius: 25px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.9rem;
+        }
+
+        .read-more-btn:hover,
+        .show-less-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.3);
+        }
+
+        .full-content {
+            margin-top: 1.5rem;
+            padding: 1.5rem;
+            background: #f8fafc;
+            border-radius: 15px;
+            border-left: 4px solid var(--primary);
+            animation: slideDown 0.3s ease;
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .content-text {
+            line-height: 1.7;
+            color: var(--dark);
+            margin-bottom: 1.5rem;
+        }
+
+        .content-text p {
+            margin-bottom: 1rem;
+        }
+
+        .show-less-btn {
+            background: var(--gray);
+            width: 100%;
+            justify-content: center;
+        }
+
+        .show-less-btn:hover {
+            background: #6b7280;
+        }
+
+        /* Updated Hero Section */
+        .hero-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4rem;
+            align-items: center;
+            text-align: left;
+        }
+
+        .hero-text h1 {
+            font-size: 3.5rem;
+            font-weight: 800;
+            margin-bottom: 1.5rem;
+            line-height: 1.2;
+            background: linear-gradient(135deg, #fff 0%, #a5b4fc 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .hero-text p {
+            font-size: 1.3rem;
+            margin-bottom: 2.5rem;
+            opacity: 0.9;
+            line-height: 1.6;
+        }
+
+        .hero-buttons {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 3rem;
+        }
+
+        .hero-stats {
+            display: flex;
+            gap: 2rem;
+        }
+
+        .stat {
+            text-align: center;
+        }
+
+        .stat-number {
+            display: block;
+            font-size: 2rem;
+            font-weight: 800;
+            color: rgb(255, 255, 255);
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-label {
+            font-size: 0.9rem;
+            opacity: 0.8;
+        }
+
+        /* Hero Image Section */
+        .hero-image {
+            position: relative;
+        }
+
+        .ai-image-container {
+            position: relative;
+            width: 100%;
+            height: 400px;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        }
+
+        .ai-image {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            opacity: 0;
+            transition: opacity 1s ease-in-out;
+            border-radius: 20px;
+        }
+
+        .ai-image.active {
+            opacity: 1;
+        }
+
+        /* Floating Elements */
+        .floating-elements {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+
+        .floating-element {
+            position: absolute;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 15px;
+            width: 60px;
+            height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            color: white;
+            animation: float 6s ease-in-out infinite;
+        }
+
+        .element-1 {
+            top: 20%;
+            left: -20px;
+            animation-delay: 0s;
+        }
+
+        .element-2 {
+            top: 60%;
+            right: -20px;
+            animation-delay: 2s;
+        }
+
+        .element-3 {
+            bottom: 20%;
+            left: 30%;
+            animation-delay: 4s;
+        }
+
+        @keyframes float {
+
+            0%,
+            100% {
+                transform: translateY(0) rotate(0deg);
+            }
+
+            50% {
+                transform: translateY(-20px) rotate(10deg);
+            }
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .hero-content {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+                text-align: center;
+            }
+
+            .hero-text h1 {
+                font-size: 2.5rem;
+
+            }
+
+            .hero-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .hero-stats {
+                justify-content: center;
+
+            }
+
+            .ai-image-container {
+                height: 300px;
+            }
+        }
+
+        /* AI Tools Section */
+        .ai-tools {
+            padding: 80px 0;
+            background: white;
+        }
+
+        .tools-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+
+        .tool-card {
+            background: white;
+            padding: 2rem;
+            border-radius: 20px;
+            text-align: center;
+            text-decoration: none;
+            color: var(--dark);
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .tool-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: var(--gradient);
+        }
+
+        .tool-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+            border-color: var(--primary);
+        }
+
+        .tool-icon {
+            width: 80px;
+            height: 80px;
+            background: #f8fafc;
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1.5rem;
+            padding: 15px;
+            transition: all 0.3s ease;
+        }
+
+        .tool-card:hover .tool-icon {
+            background: var(--gradient);
+            transform: scale(1.1);
+        }
+
+        .tool-icon img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            border-radius: 10px;
+        }
+
+        .tool-card h3 {
+            font-size: 1.3rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            color: var(--darker);
+        }
+
+        .tool-card p {
+            color: var(--gray);
+            font-size: 0.9rem;
+            line-height: 1.5;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .tools-grid {
+                grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+                gap: 1.5rem;
+            }
+
+            .tool-card {
+                padding: 1.5rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .tools-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .review-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 2rem;
+        }
+
+        @media (max-width: 768px) {
+            .review-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Social Proof Section */
+        .social-proof {
+            margin-top: 4rem;
+            text-align: center;
+        }
+
+        .proof-stats {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 2rem;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .proof-item {
+            padding: 1.5rem;
+        }
+
+        .proof-number {
+            font-size: 2rem;
+            font-weight: 800;
+            color: var(--primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .proof-label {
+            color: var(--gray);
+            font-size: 0.9rem;
+            font-weight: 600;
+        }
+
+        @media (max-width: 768px) {
+            .proof-stats {
+                grid-template-columns: 1fr;
+                gap: 1rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Premium Header -->
+    <header id="header">
+        <div class="container">
+            <div class="nav-container">
+                <div class="logo">
+                    <i class="fas fa-brain"></i>
+                    AI Bloggers
+                </div>
+
+                <div class="menu-toggle" id="mobile-menu">
+                    <i class="fas fa-bars"></i>
+                </div>
+
+                <ul class="nav-menu" id="nav-menu">
+                    <li><a href="home.html" class="active">Home</a></li>
+                    <li><a href="#ai-tools">AI Tools</a></li>
+                    <li><a href="#feedback">Feedback</a></li>
+                    <li><a href="#tools-section">Top Ai</a></li>
+                </ul>
+            </div>
+        </div>
+    </header>
+
+    <!-- Animated Hero Section -->
+    <section class="hero">
+        <div class="container">
+            <div class="hero-content">
+                <div class="hero-text">
+                    <h1>Master AI Technology & Digital Innovation</h1>
+                    <p>Discover cutting-edge AI tools, expert tutorials, and practical strategies to enhance your
+                        digital skills</p>
+                    <div class="hero-buttons">
+                        <a href="#blog-posts" class="btn btn-primary">
+                            <i class="fas fa-brain"></i>
+                            Explore AI Insights
+                        </a>
+                        <a href="#ai-tools" class="btn btn-secondary">
+                            <i class="fas fa-rocket"></i>
+                            Discover AI Tools
+                        </a>
+                    </div>
+                </div>
+                <div class="hero-image">
+                    <div class="ai-image-container">
+                        <img src="https://images.unsplash.com/photo-1677442136019-21780ecad995?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80"
+                            alt="AI Technology" class="ai-image active" id="ai-image-1">
+                        <img src="https://images.unsplash.com/photo-1485827404703-89b55fcc595e?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80"
+                            alt="AI Analytics" class="ai-image" id="ai-image-2">
+                        <img src="https://images.unsplash.com/photo-1555949963-aa79dcee981c?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80"
+                            alt="AI Future" class="ai-image" id="ai-image-3">
+                        <img src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80"
+                            alt="AI Growth" class="ai-image" id="ai-image-4">
+                    </div>
+                    <div class="floating-elements">
+                        <div class="floating-element element-1">
+                            <i class="fas fa-robot"></i>
+                        </div>
+                        <div class="floating-element element-2">
+                            <i class="fas fa-brain"></i>
+                        </div>
+                        <div class="floating-element element-3">
+                            <i class="fas fa-chart-line"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+
+    <!-- Featured Blog Posts -->
+    <section class="container">
+        <div class="section-title">
+            <h2>Latest AI Insights</h2>
+            <p>Stay updated with the most recent developments in artificial intelligence</p>
+        </div>
+
+        <div class="blog-grid" id="blog-posts">
+            <div class="loading">
+                <i class="fas fa-spinner fa-spin"></i>
+                <div class="loading-text">Loading blog posts...</div>
+            </div>
+        </div>
+    </section>
+    <!-- AI Tools Section -->
+    <section class="ai-tools" id="ai-tools">
+        <div class="container">
+            <div class="section-title">
+                <h2>Popular AI Tools</h2>
+                <p>Explore the most powerful AI tools that are transforming industries</p>
+            </div>
+            <div class="tools-grid">
+                <a href="https://chat.openai.com" target="_blank" class="tool-card">
+                    <div class="tool-icon">
+                        <img src="https://logo.clearbit.com/openai.com" alt="ChatGPT"
+                            onerror="this.src='https://via.placeholder.com/60?text=GPT'">
+                    </div>
+                    <h3>ChatGPT</h3>
+                    <p>Advanced AI chatbot for conversations and content creation</p>
+                </a>
+
+                <a href="https://midjourney.com" target="_blank" class="tool-card">
+                    <div class="tool-icon">
+                        <img src="https://logo.clearbit.com/midjourney.com" alt="Midjourney"
+                            onerror="this.src='https://via.placeholder.com/60?text=MJ'">
+                    </div>
+                    <h3>Midjourney</h3>
+                    <p>AI-powered image generation and digital art creation</p>
+                </a>
+
+                <a href="https://claude.ai" target="_blank" class="tool-card">
+                    <div class="tool-icon">
+                        <img src="https://logo.clearbit.com/anthropic.com" alt="Claude"
+                            onerror="this.src='https://via.placeholder.com/60?text=CL'">
+                    </div>
+                    <h3>Claude AI</h3>
+                    <p>Conversational AI assistant for complex tasks</p>
+                </a>
+
+                <a href="https://gemini.google.com" target="_blank" class="tool-card">
+                    <div class="tool-icon">
+                        <img src="https://logo.clearbit.com/google.com" alt="Gemini"
+                            onerror="this.src='https://via.placeholder.com/60?text=GM'">
+                    </div>
+                    <h3>Google Gemini</h3>
+                    <p>Google's multimodal AI for text and image understanding</p>
+                </a>
+
+                <a href="https://copilot.microsoft.com" target="_blank" class="tool-card">
+                    <div class="tool-icon">
+                        <img src="https://logo.clearbit.com/microsoft.com" alt="Copilot"
+                            onerror="this.src='https://via.placeholder.com/60?text=CP'">
+                    </div>
+                    <h3>Microsoft Copilot</h3>
+                    <p>AI assistant integrated with Microsoft 365</p>
+                </a>
+
+                <a href="https://notion.ai" target="_blank" class="tool-card">
+                    <div class="tool-icon">
+                        <img src="https://logo.clearbit.com/notion.so" alt="Notion AI"
+                            onerror="this.src='https://via.placeholder.com/60?text=NA'">
+                    </div>
+                    <h3>Notion AI</h3>
+                    <p>AI writing and productivity assistant in Notion</p>
+                </a>
+
+                <a href="https://runwayml.com" target="_blank" class="tool-card">
+                    <div class="tool-icon">
+                        <img src="https://logo.clearbit.com/runwayml.com" alt="Runway ML"
+                            onerror="this.src='https://via.placeholder.com/60?text=RM'">
+                    </div>
+                    <h3>Runway ML</h3>
+                    <p>AI video editing and generation platform</p>
+                </a>
+
+                <a href="https://www.jasper.ai" target="_blank" class="tool-card">
+                    <div class="tool-icon">
+                        <img src="https://logo.clearbit.com/jasper.ai" alt="Jasper"
+                            onerror="this.src='https://via.placeholder.com/60?text=JA'">
+                    </div>
+                    <h3>Jasper AI</h3>
+                    <p>AI content creation for marketing and business</p>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Real User Experiences -->
+    <section class="reviews" id="feedback">
+        <div class="container">
+            <div class="section-title">
+                <h2>Community Feedback</h2>
+                <p>Honest experiences from our readers</p>
+            </div>
+
+            <div class="review-grid">
+                <div class="review-card">
+                    <div class="reviewer-info">
+                        <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&h=100&fit=crop&crop=face"
+                            alt="Reader" class="reviewer-img">
+                        <div class="reviewer-details">
+                            <h4>Tech Enthusiast</h4>
+                            <p>Regular Reader</p>
+                        </div>
+                    </div>
+                    <p class="review-text">"The AI tool comparisons are very helpful for making informed decisions.
+                        Saved me time researching different options."</p>
+                    <div class="rating">
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star-half-alt"></i>
+                    </div>
+                </div>
+
+                <div class="review-card">
+                    <div class="reviewer-info">
+                        <img src="https://images.unsplash.com/photo-1489424731084-a5d8b219a5bb?w=100&h=100&fit=crop&crop=face"
+                            alt="Reader" class="reviewer-img">
+                        <div class="reviewer-details">
+                            <h4>Content Creator</h4>
+                            <p>Blog Subscriber</p>
+                        </div>
+                    </div>
+                    <p class="review-text">"Appreciate the practical tutorials. They're easy to follow and implement in
+                        real projects."</p>
+                    <div class="rating">
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                    </div>
+                </div>
+
+                <div class="review-card">
+                    <div class="reviewer-info">
+                        <img src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&h=100&fit=crop&crop=face"
+                            alt="Reader" class="reviewer-img">
+                        <div class="reviewer-details">
+                            <h4>AI Learner</h4>
+                            <p>Monthly Visitor</p>
+                        </div>
+                    </div>
+                    <p class="review-text">"Good resource for staying updated with AI developments. The explanations are
+                        clear for beginners."</p>
+                    <div class="rating">
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="far fa-star"></i>
+                    </div>
+                </div>
+
+                <div class="review-card">
+                    <div class="reviewer-info">
+                        <img src="https://images.unsplash.com/photo-1607746882042-944635dfe10e?w=100&h=100&fit=crop&crop=face"
+                            alt="Reader" class="reviewer-img">
+                        <div class="reviewer-details">
+                            <h4>Digital Marketer</h4>
+                            <p>Industry Professional</p>
+                        </div>
+                    </div>
+                    <p class="review-text">"Useful insights about AI applications in marketing. Helps me understand new
+                        tools better."</p>
+                    <div class="rating">
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star-half-alt"></i>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Real Social Proof Section -->
+            <div class="social-proof">
+                <div class="proof-stats">
+                    <div class="proof-item">
+                        <div class="proof-number">10,000+</div>
+                        <div class="proof-label">Monthly Readers</div>
+                    </div>
+                    <div class="proof-item">
+                        <div class="proof-number">95%</div>
+                        <div class="proof-label">Reader Satisfaction</div>
+                    </div>
+                    <div class="proof-item">
+                        <div class="proof-number">200+</div>
+                        <div class="proof-label">Countries Reached</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- Animated Tools Section -->
+    <section class="tools-section" id="tools-section">
+        <div class="container">
+            <div class="section-title">
+                <h2 style="color: white; -webkit-text-fill-color: white;">Trusted By Top AI Companies</h2>
+                <p style="color: #9ca3af;">We review and feature the best tools in the industry</p>
+            </div>
+        </div>
+        <div class="tools-scroll" id="tools-scroll">
+            <!-- Tools will be added by JavaScript -->
+        </div>
+
+    </section>
+
+    <!-- Premium Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-column">
+                    <div class="logo" style="font-size: 1.8rem; margin-bottom: 1rem;">
+                        <i class="fas fa-brain"></i>
+                        AI Bloggers
+                    </div>
+                    <p style="color: #9ca3af; margin-bottom: 1.5rem;">Your premier destination for AI tools, tutorials,
+                        and the latest developments in artificial intelligence.</p>
+                    <div class="social-links">
+                        <a href="#"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                        <a href="#"><i class="fab fa-linkedin-in"></i></a>
+                        <a href="#"><i class="fab fa-youtube"></i></a>
+                    </div>
+                </div>
+
+                <div class="footer-column">
+                    <h3>Quick Links</h3>
+                    <ul class="footer-links">
+                        <li><a href="home.html"><i class="fas fa-chevron-right"></i> Home</a></li>
+                        <li><a href="#ai-tools"><i class="fas fa-chevron-right"></i> AI Tools</a></li>
+                        <li><a href="#"><i class="fas fa-chevron-right"></i> Tutorials</a></li>
+                        <li><a href="#feedback"><i class="fas fa-chevron-right"></i> Feedback</a></li>
+                        <li><a href="#"><i class="fas fa-chevron-right"></i> Blog</a></li>
+                    </ul>
+                </div>
+
+                <div class="footer-column">
+                    <h3>Categories</h3>
+                    <ul class="footer-links">
+                        <li><a href="#ai-tools"><i class="fas fa-chevron-right"></i> AI Writing</a></li>
+                        <li><a href="#ai-tools"><i class="fas fa-chevron-right"></i> Image Generation</a></li>
+                        <li><a href="#ai-tools"><i class="fas fa-chevron-right"></i> Video AI</a></li>
+                        <li><a href="#ai-tools"><i class="fas fa-chevron-right"></i> Productivity</a></li>
+                        <li><a href="#ai-tools"><i class="fas fa-chevron-right"></i> Coding Assistants</a></li>
+                    </ul>
+                </div>
+
+                <div class="footer-column">
+                    <h3>Newsletter</h3>
+                    <p style="color: #9ca3af; margin-bottom: 1.5rem;">Get the latest AI tools and tips directly in your
+                        inbox.</p>
+                    <div class="newsletter">
+                        <input type="email" placeholder="Enter your email">
+                        <button class="btn btn-primary" style="width: 100%;">
+                            <i class="fas fa-paper-plane"></i>
+                            Subscribe
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="copyright">
+                <p>&copy; 2024 AI Bloggers. All rights reserved. | Made with ❤️ for AI Enthusiasts Worldwide</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Firebase Scripts -->
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
+
+    <script>
+        // Firebase Configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyCEtGC6NgyOrlL1r6J7PJPg11dF8ybQK0E",
+            authDomain: "ai-mining-c0f85.firebaseapp.com",
+            projectId: "ai-mining-c0f85",
+            storageBucket: "ai-mining-c0f85.firebasestorage.app",
+            messagingSenderId: "227375514915",
+            appId: "1:227375514915:web:035e4925af6a495f42b896",
+            measurementId: "G-41VBZ2K6Y6"
+        };
+
+        // Initialize Firebase
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.firestore();
+
+        // Mobile Menu Toggle
+        const mobileMenu = document.getElementById('mobile-menu');
+        const navMenu = document.getElementById('nav-menu');
+
+        mobileMenu.addEventListener('click', () => {
+            navMenu.classList.toggle('active');
+            mobileMenu.innerHTML = navMenu.classList.contains('active')
+                ? '<i class="fas fa-times"></i>'
+                : '<i class="fas fa-bars"></i>';
+        });
+
+        // Header Scroll Effect
+        const header = document.getElementById('header');
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 100) {
+                header.classList.add('scrolled');
+            } else {
+                header.classList.remove('scrolled');
+            }
+        });
+
+        // Animated Counter
+        const counters = document.querySelectorAll('.stat-number');
+        const speed = 200;
+
+        counters.forEach(counter => {
+            const updateCount = () => {
+                const target = +counter.getAttribute('data-count');
+                const count = +counter.innerText;
+                const increment = target / speed;
+
+                if (count < target) {
+                    counter.innerText = Math.ceil(count + increment);
+                    setTimeout(updateCount, 1);
+                } else {
+                    counter.innerText = target;
+                }
+            };
+
+            const observer = new IntersectionObserver((entries) => {
+                if (entries[0].isIntersecting) {
+                    updateCount();
+                }
+            });
+
+            observer.observe(counter);
+        });
+
+        // AI Tools Data
+        const aiTools = [
+            { name: "ChatGPT", logo: "https://logo.clearbit.com/openai.com" },
+            { name: "Midjourney", logo: "https://logo.clearbit.com/midjourney.com" },
+            { name: "Claude", logo: "https://logo.clearbit.com/anthropic.com" },
+            { name: "Gemini", logo: "https://logo.clearbit.com/google.com" },
+            { name: "Copilot", logo: "https://logo.clearbit.com/microsoft.com" },
+            { name: "Jasper", logo: "https://logo.clearbit.com/jasper.ai" },
+            { name: "Copy.ai", logo: "https://logo.clearbit.com/copy.ai" },
+            { name: "Grammarly", logo: "https://logo.clearbit.com/grammarly.com" },
+            { name: "Canva AI", logo: "https://logo.clearbit.com/canva.com" },
+            { name: "Runway ML", logo: "https://logo.clearbit.com/runwayml.com" },
+            { name: "DALL-E", logo: "https://logo.clearbit.com/openai.com" },
+            { name: "Stable Diffusion", logo: "https://logo.clearbit.com/stability.ai" },
+            { name: "Notion AI", logo: "https://logo.clearbit.com/notion.so" },
+            { name: "Beautiful.AI", logo: "https://logo.clearbit.com/beautiful.ai" },
+            { name: "Gamma", logo: "https://logo.clearbit.com/gamma.app" },
+            { name: "Tome", logo: "https://logo.clearbit.com/tome.app" },
+            { name: "Synthesia", logo: "https://logo.clearbit.com/synthesia.io" },
+            { name: "Murf AI", logo: "https://logo.clearbit.com/murf.ai" },
+            { name: "Playground AI", logo: "https://logo.clearbit.com/playgroundai.com" },
+            { name: "Lexica", logo: "https://logo.clearbit.com/lexica.art" },
+            { name: "PromptBase", logo: "https://logo.clearbit.com/promptbase.com" },
+            { name: "Krisp", logo: "https://logo.clearbit.com/krisp.ai" },
+            { name: "Cleanvoice", logo: "https://logo.clearbit.com/cleanvoice.ai" },
+            { name: "Adobe Podcast", logo: "https://logo.clearbit.com/adobe.com" },
+            { name: "Auphonic", logo: "https://logo.clearbit.com/auphonic.com" },
+            { name: "Podcastle", logo: "https://logo.clearbit.com/podcastle.ai" },
+            { name: "Respeecher", logo: "https://logo.clearbit.com/respeecher.com" },
+            { name: "VocalRemover", logo: "https://logo.clearbit.com/vocalremover.org" },
+            { name: "Lalal.ai", logo: "https://logo.clearbit.com/lalal.ai" },
+            { name: "Moises", logo: "https://logo.clearbit.com/moises.ai" },
+            { name: "Audo AI", logo: "https://logo.clearbit.com/audo.ai" }
+        ];
+
+        // Populate AI Tools Scroll (NO DUPLICATION)
+        const toolsScroll = document.getElementById('tools-scroll');
+        aiTools.forEach(tool => {
+            const toolItem = document.createElement('div');
+            toolItem.className = 'tool-item';
+            toolItem.innerHTML = `
+        <img src="${tool.logo}" alt="${tool.name}" onerror="this.src='https://via.placeholder.com/40?text=${tool.name.charAt(0)}'">
+        <span>${tool.name}</span>
+    `;
+            toolsScroll.appendChild(toolItem);
+        });
+        // Load Blog Posts from Firestore
+        function loadBlogPosts() {
+            const blogPostsContainer = document.getElementById('blog-posts');
+
+            db.collection("blogPosts")
+                .orderBy("date", "desc")
+                .limit(6)
+                .get()
+                .then(snapshot => {
+                    if (snapshot.empty) {
+                        blogPostsContainer.innerHTML = `
+                            <div class="no-posts">
+                                <i class="fas fa-newspaper"></i>
+                                <h3>No Blog Posts Yet</h3>
+                                <p>Check back later for amazing AI insights!</p>
+                            </div>
+                        `;
+                        return;
+                    }
+
+                    blogPostsContainer.innerHTML = '';
+                    snapshot.forEach(doc => {
+                        const post = doc.data();
+                        const postId = doc.id;
+
+                        const postElement = document.createElement('div');
+                        postElement.className = 'blog-card';
+                        postElement.innerHTML = `
+        <img src="${post.image || 'https://images.unsplash.com/photo-1677442136019-21780ecad995?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80'}" 
+             alt="${post.title}" 
+             class="blog-image"
+             onerror="this.src='https://via.placeholder.com/400x220?text=Blog+Image'">
+        <div class="blog-content">
+            <span class="blog-category">${post.category || 'AI Tools'}</span>
+            <h3 class="blog-title">${post.title || 'Blog Post Title'}</h3>
+            <div class="blog-meta">
+                <span><i class="far fa-calendar"></i> ${post.date || new Date().toLocaleDateString()}</span>
+                <span><i class="far fa-eye"></i> ${post.views || 0} views</span>
+            </div>
+            <p class="blog-excerpt">${post.excerpt || 'No description available'}</p>
+            
+            <!-- YEH WALA PART CHANGE KAR DIYA -->
+            <div class="read-more-section">
+                <button class="read-more-btn" onclick="toggleReadMore('${postId}', this)">
+                    Read More
+                    <i class="fas fa-chevron-down"></i>
+                </button>
+                <div class="full-content" id="content-${postId}" style="display: none;">
+                    <div class="content-text">
+                        ${post.content ? formatPostContent(post.content) : 'No content available.'}
+                    </div>
+                    <button class="show-less-btn" onclick="toggleReadMore('${postId}', this)">
+                        Show Less
+                        <i class="fas fa-chevron-up"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    `;
+                        blogPostsContainer.appendChild(postElement);
+                    });
+
+                })
+                .catch(error => {
+                    console.error("Error loading blog posts:", error);
+                    blogPostsContainer.innerHTML = `
+                        <div class="no-posts">
+                            <i class="fas fa-exclamation-triangle"></i>
+                            <h3>Error Loading Posts</h3>
+                            <p>Please try refreshing the page</p>
+                        </div>
+                    `;
+                });
+        }
+        // AI Image Rotation
+        let currentImageIndex = 0;
+        const aiImages = document.querySelectorAll('.ai-image');
+
+        function rotateAIImages() {
+            // Hide current image
+            aiImages[currentImageIndex].classList.remove('active');
+
+            // Move to next image
+            currentImageIndex = (currentImageIndex + 1) % aiImages.length;
+
+            // Show next image
+            aiImages[currentImageIndex].classList.add('active');
+        }
+
+        // Start image rotation every 3 seconds
+        setInterval(rotateAIImages, 3000);
+
+        // Smooth scrolling for buttons
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+        // Toggle Read More Function
+        function toggleReadMore(postId, button) {
+            const contentDiv = document.getElementById(`content-${postId}`);
+            const isExpanded = contentDiv.style.display === 'block';
+
+            if (!isExpanded) {
+                // Show content
+                contentDiv.style.display = 'block';
+                button.style.display = 'none';
+
+                // Increment views in Firestore
+                db.collection('blogPosts').doc(postId).update({
+                    views: firebase.firestore.FieldValue.increment(1)
+                });
+            } else {
+                // Hide content
+                contentDiv.style.display = 'none';
+                // Show the read more button again
+                const readMoreBtn = contentDiv.previousElementSibling;
+                if (readMoreBtn && readMoreBtn.classList.contains('read-more-btn')) {
+                    readMoreBtn.style.display = 'inline-flex';
+                }
+            }
+        }
+
+        // Format post content function
+        function formatPostContent(content) {
+            if (!content) return '<p>No content available.</p>';
+
+            const paragraphs = content.split('\n').filter(p => p.trim());
+            return paragraphs.map(p => `<p>${p}</p>`).join('');
+        }
+        // Load blog posts when page loads
+        document.addEventListener('DOMContentLoaded', loadBlogPosts);
+    </script>
+</body>
+
+</html>
