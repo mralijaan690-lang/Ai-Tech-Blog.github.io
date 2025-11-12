@@ -1,0 +1,1608 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Bloggers - Admin Panel</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
+
+    <style>
+        :root {
+            --primary: #6366f1;
+            --secondary: #10b981;
+            --accent: #f59e0b;
+            --danger: #ef4444;
+            --info: #3b82f6;
+            --light: #f8f9fa;
+            --dark: #1f2937;
+            --darker: #111827;
+            --sidebar: #1f2937;
+            --sidebar-hover: #374151;
+            --text-primary: #333;
+            --text-secondary: #6b7280;
+            --gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: #f5f7fa;
+            color: var(--text-primary);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        /* Login Styles */
+        .login-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background: var(--gradient);
+            padding: 20px;
+        }
+
+        .login-box {
+            background: white;
+            padding: 40px;
+            border-radius: 16px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            width: 100%;
+            max-width: 420px;
+            transform: translateY(0);
+            animation: slideUp 0.6s ease-out;
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .login-header {
+            text-align: center;
+            margin-bottom: 35px;
+        }
+
+        .login-header h1 {
+            color: var(--primary);
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            margin-bottom: 12px;
+            font-size: 2.2rem;
+        }
+
+        .login-header p {
+            color: var(--text-secondary);
+            font-size: 1.1rem;
+        }
+
+        .form-group {
+            margin-bottom: 24px;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 10px;
+            font-weight: 500;
+            color: var(--primary);
+            font-size: 1rem;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 14px 16px;
+            border: 2px solid #e5e7eb;
+            border-radius: 10px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            background: white;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        .form-control:focus {
+            border-color: var(--primary);
+            outline: none;
+            box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.15);
+            transform: translateY(-2px);
+        }
+
+        .login-btn {
+            width: 100%;
+            padding: 15px;
+            background: var(--gradient);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: 'Poppins', sans-serif;
+            box-shadow: 0 8px 20px rgba(102, 126, 234, 0.3);
+        }
+
+        .login-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 25px rgba(102, 126, 234, 0.4);
+        }
+
+        .error-message {
+            background: #fee2e2;
+            color: var(--danger);
+            padding: 14px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            font-size: 0.95rem;
+            display: none;
+            border-left: 4px solid var(--danger);
+            animation: shake 0.5s ease-in-out;
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-5px); }
+            75% { transform: translateX(5px); }
+        }
+
+        /* Admin Panel Layout */
+        .admin-container {
+            display: flex;
+            min-height: 100vh;
+            background: #f5f7fa;
+            width: 100%;
+        }
+
+        /* Sidebar Styles */
+        .sidebar {
+            width: 280px;
+            background: linear-gradient(180deg, var(--sidebar) 0%, #111827 100%);
+            color: white;
+            position: fixed;
+            height: 100vh;
+            overflow-y: auto;
+            transition: all 0.3s ease;
+            z-index: 1000;
+            box-shadow: 4px 0 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .sidebar-header {
+            padding: 25px 20px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            text-align: center;
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .sidebar-header h1 {
+            font-size: 1.6rem;
+            font-weight: 700;
+            color: white;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            justify-content: center;
+        }
+
+        .nav-links {
+            padding: 20px 0;
+        }
+
+        .nav-item {
+            padding: 16px 24px;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            color: #d1d5db;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            border-left: 4px solid transparent;
+            margin: 4px 12px;
+            border-radius: 8px;
+            font-weight: 500;
+        }
+
+        .nav-item:hover {
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            border-left-color: var(--primary);
+            transform: translateX(5px);
+        }
+
+        .nav-item.active {
+            background: rgba(99, 102, 241, 0.15);
+            color: white;
+            border-left-color: var(--primary);
+            box-shadow: 0 4px 12px rgba(99, 102, 241, 0.2);
+        }
+
+        .nav-item i {
+            width: 20px;
+            text-align: center;
+            font-size: 1.2rem;
+        }
+
+        .nav-text {
+            font-size: 1rem;
+            font-weight: 500;
+        }
+
+        /* Mobile Menu Toggle */
+        .mobile-menu-toggle {
+            display: none;
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            width: 45px;
+            height: 45px;
+            font-size: 1.2rem;
+            z-index: 2000;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+        }
+
+        /* Main Content */
+        .main-content {
+            flex: 1;
+            margin-left: 280px;
+            padding: 25px;
+            transition: all 0.3s ease;
+            min-width: 0;
+        }
+
+        /* Header */
+        .top-header {
+            background: white;
+            padding: 20px 30px;
+            border-radius: 16px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            border: 1px solid rgba(0, 0, 0, 0.05);
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .header-left h2 {
+            color: var(--primary);
+            font-weight: 700;
+            font-size: 1.8rem;
+            background: var(--gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            background: var(--light);
+            padding: 10px 18px;
+            border-radius: 50px;
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+        }
+
+        .user-info:hover {
+            border-color: var(--primary);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .user-avatar {
+            width: 42px;
+            height: 42px;
+            background: var(--gradient);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 700;
+            font-size: 1.1rem;
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+        }
+
+        .logout-btn {
+            background: linear-gradient(135deg, var(--danger), #dc2626);
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            box-shadow: 0 6px 15px rgba(239, 68, 68, 0.3);
+        }
+
+        .logout-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(239, 68, 68, 0.4);
+        }
+
+        /* Dashboard Cards */
+        .dashboard-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 25px;
+            margin-bottom: 30px;
+        }
+
+        .card {
+            background: white;
+            padding: 25px;
+            border-radius: 16px;
+            box-shadow: 0 6px 25px rgba(0, 0, 0, 0.08);
+            border-left: 5px solid var(--primary);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            min-height: 200px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: var(--gradient);
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 35px rgba(0, 0, 0, 0.15);
+        }
+
+        .card.success {
+            border-left-color: var(--success);
+        }
+
+        .card.warning {
+            border-left-color: var(--warning);
+        }
+
+        .card.info {
+            border-left-color: var(--info);
+        }
+
+        .card-icon {
+            width: 60px;
+            height: 60px;
+            background: rgba(99, 102, 241, 0.1);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 15px;
+            color: var(--primary);
+            font-size: 1.5rem;
+            transition: all 0.3s ease;
+        }
+
+        .card:hover .card-icon {
+            transform: scale(1.1) rotate(5deg);
+        }
+
+        .card.success .card-icon {
+            background: rgba(16, 185, 129, 0.1);
+            color: var(--success);
+        }
+
+        .card.warning .card-icon {
+            background: rgba(245, 158, 11, 0.1);
+            color: var(--warning);
+        }
+
+        .card.info .card-icon {
+            background: rgba(59, 130, 246, 0.1);
+            color: var(--info);
+        }
+
+        .card h3 {
+            font-size: 1rem;
+            color: var(--text-secondary);
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+
+        .card .number {
+            font-size: 2rem;
+            font-weight: 800;
+            color: var(--primary);
+            margin-bottom: 8px;
+            background: var(--gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        /* Content Sections */
+        .content-section {
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 6px 25px rgba(0, 0, 0, 0.08);
+            margin-bottom: 30px;
+            overflow: hidden;
+            border: 1px solid rgba(0, 0, 0, 0.05);
+        }
+
+        .section-header {
+            padding: 20px 25px;
+            border-bottom: 1px solid #e5e7eb;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: linear-gradient(135deg, #f8fafc, #f1f5f9);
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .section-header h3 {
+            color: var(--primary);
+            font-weight: 700;
+            font-size: 1.3rem;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .section-actions {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 10px 18px;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-family: 'Poppins', sans-serif;
+            text-decoration: none;
+            white-space: nowrap;
+        }
+
+        .btn-sm {
+            padding: 8px 14px;
+            font-size: 0.8rem;
+        }
+
+        .btn-primary {
+            background: var(--gradient);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(102, 126, 234, 0.3);
+        }
+
+        .btn-success {
+            background: linear-gradient(135deg, var(--success), #059669);
+            color: white;
+        }
+
+        .btn-success:hover {
+            transform: translateY(-2px);
+        }
+
+        .btn-warning {
+            background: linear-gradient(135deg, var(--warning), #d97706);
+            color: white;
+        }
+
+        .btn-warning:hover {
+            transform: translateY(-2px);
+        }
+
+        .btn-danger {
+            background: linear-gradient(135deg, var(--danger), #dc2626);
+            color: white;
+        }
+
+        .btn-danger:hover {
+            transform: translateY(-2px);
+        }
+
+        /* Tables */
+        .table-container {
+            overflow-x: auto;
+            border-radius: 0 0 16px 16px;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 800px;
+        }
+
+        th, td {
+            padding: 14px 16px;
+            text-align: left;
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        th {
+            background: linear-gradient(135deg, #f8fafc, #f1f5f9);
+            color: var(--primary);
+            font-weight: 700;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            border-bottom: 2px solid #e5e7eb;
+        }
+
+        td {
+            font-size: 0.85rem;
+            color: var(--text-primary);
+        }
+
+        tbody tr:hover {
+            background: rgba(99, 102, 241, 0.05);
+        }
+
+        .status-badge {
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            white-space: nowrap;
+        }
+
+        .status-published {
+            background: #d1fae5;
+            color: #065f46;
+        }
+
+        .status-draft {
+            background: #fef3c7;
+            color: #d97706;
+        }
+
+        .category-badge {
+            background: var(--gradient);
+            color: white;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 0.7rem;
+            font-weight: 700;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            white-space: nowrap;
+        }
+
+        /* Forms */
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: var(--primary);
+            font-size: 0.95rem;
+        }
+
+        textarea.form-control {
+            min-height: 120px;
+            resize: vertical;
+        }
+
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            z-index: 3000;
+        }
+
+        .modal-content {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: white;
+            padding: 30px;
+            border-radius: 16px;
+            width: 95%;
+            max-width: 600px;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: 0 25px 80px rgba(0, 0, 0, 0.4);
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #e5e7eb;
+        }
+
+        .modal-header h3 {
+            color: var(--primary);
+            font-weight: 700;
+            font-size: 1.3rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .close-modal {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--text-secondary);
+            transition: all 0.3s ease;
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .close-modal:hover {
+            background: var(--light);
+            color: var(--danger);
+        }
+
+        /* Loading States */
+        .loading {
+            text-align: center;
+            padding: 40px 20px;
+            color: var(--text-secondary);
+        }
+
+        .loading i {
+            font-size: 2rem;
+            margin-bottom: 15px;
+            display: block;
+            color: var(--primary);
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .mobile-menu-toggle {
+                display: flex;
+            }
+
+            .sidebar {
+                width: 280px;
+                transform: translateX(-100%);
+            }
+
+            .sidebar.active {
+                transform: translateX(0);
+            }
+
+            .main-content {
+                margin-left: 0;
+                padding: 15px;
+            }
+
+            .dashboard-cards {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+
+            .top-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 15px;
+                padding: 15px;
+            }
+
+            .header-right {
+                flex-direction: column;
+                width: 100%;
+                gap: 10px;
+            }
+
+            .form-row {
+                grid-template-columns: 1fr;
+                gap: 15px;
+            }
+
+            .modal-content {
+                padding: 20px;
+                width: 98%;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .main-content {
+                padding: 10px;
+            }
+
+            .card {
+                padding: 20px;
+            }
+
+            .card .number {
+                font-size: 1.8rem;
+            }
+
+            .section-header {
+                padding: 15px 20px;
+            }
+
+            .btn {
+                padding: 8px 15px;
+                font-size: 0.85rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Mobile Menu Toggle -->
+    <button class="mobile-menu-toggle" id="mobileMenuToggle">
+        <i class="fas fa-bars"></i>
+    </button>
+
+    <!-- Login Screen -->
+    <div id="loginScreen" class="login-container">
+        <div class="login-box">
+            <div class="login-header">
+                <h1>
+                    <i class="fas fa-brain"></i>
+                    AI Bloggers
+                </h1>
+                <p>Admin Panel Login</p>
+            </div>
+
+            <div id="loginError" class="error-message"></div>
+
+            <form id="loginForm">
+                <div class="form-group">
+                    <label class="form-label">Email</label>
+                    <input type="email" id="loginEmail" class="form-control" placeholder="admin@aibloggers.com" required>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Password</label>
+                    <input type="password" id="loginPassword" class="form-control" placeholder="Enter password" required>
+                </div>
+
+                <button type="submit" class="login-btn">
+                    <i class="fas fa-sign-in-alt"></i> Login to Admin Panel
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Admin Panel -->
+    <div id="adminPanel" class="admin-container" style="display: none;">
+        <!-- Sidebar -->
+        <div class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <h1>
+                    <i class="fas fa-brain"></i>
+                    <span class="nav-text">AI Bloggers</span>
+                </h1>
+            </div>
+
+            <div class="nav-links">
+                <a href="#" class="nav-item active" data-tab="dashboard">
+                    <i class="fas fa-chart-line"></i>
+                    <span class="nav-text">Dashboard</span>
+                </a>
+                <a href="#" class="nav-item" data-tab="posts">
+                    <i class="fas fa-newspaper"></i>
+                    <span class="nav-text">Blog Posts</span>
+                </a>
+                <a href="#" class="nav-item" data-tab="categories">
+                    <i class="fas fa-tags"></i>
+                    <span class="nav-text">Categories</span>
+                </a>
+                <a href="#" class="nav-item" data-tab="analytics">
+                    <i class="fas fa-chart-bar"></i>
+                    <span class="nav-text">Analytics</span>
+                </a>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="main-content">
+            <!-- Header -->
+            <div class="top-header">
+                <div class="header-left">
+                    <h2 id="pageTitle">Blog Dashboard</h2>
+                </div>
+                <div class="header-right">
+                    <div class="user-info">
+                        <div class="user-avatar" id="userAvatar">A</div>
+                        <div>
+                            <div style="font-weight: 600;" id="userName">Administrator</div>
+                            <div style="font-size: 0.8rem; color: #6b7280;" id="userEmail">admin@aibloggers.com</div>
+                        </div>
+                    </div>
+                    <button class="logout-btn" id="logoutBtn">
+                        <i class="fas fa-sign-out-alt"></i> Logout
+                    </button>
+                </div>
+            </div>
+
+            <!-- Dashboard Content -->
+            <div id="dashboardContent" class="tab-content">
+                <!-- Dashboard Cards -->
+                <div class="dashboard-cards">
+                    <div class="card">
+                        <div class="card-icon">
+                            <i class="fas fa-newspaper"></i>
+                        </div>
+                        <h3>Total Posts</h3>
+                        <div class="number" id="totalPosts">0</div>
+                        <div class="trend">All Time</div>
+                    </div>
+                    <div class="card success">
+                        <div class="card-icon">
+                            <i class="fas fa-eye"></i>
+                        </div>
+                        <h3>Total Views</h3>
+                        <div class="number" id="totalViews">0</div>
+                        <div class="trend">All Time</div>
+                    </div>
+                    <div class="card warning">
+                        <div class="card-icon">
+                            <i class="fas fa-tags"></i>
+                        </div>
+                        <h3>Categories</h3>
+                        <div class="number" id="totalCategories">0</div>
+                        <div class="trend">Active</div>
+                    </div>
+                    <div class="card info">
+                        <div class="card-icon">
+                            <i class="fas fa-chart-line"></i>
+                        </div>
+                        <h3>Today's Views</h3>
+                        <div class="number" id="todayViews">0</div>
+                        <div class="trend">Live</div>
+                    </div>
+                </div>
+
+                <!-- Recent Posts -->
+                <div class="content-section">
+                    <div class="section-header">
+                        <h3><i class="fas fa-clock"></i> Recent Blog Posts</h3>
+                    </div>
+                    <div class="table-container">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Image</th>
+                                    <th>Title</th>
+                                    <th>Category</th>
+                                    <th>Status</th>
+                                    <th>Views</th>
+                                    <th>Date</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="recentPostsTable">
+                                <tr>
+                                    <td colspan="7" class="loading">
+                                        <i class="fas fa-spinner fa-spin"></i>
+                                        Loading recent posts...
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Posts Content -->
+            <div id="postsContent" class="tab-content" style="display: none;">
+                <div class="content-section">
+                    <div class="section-header">
+                        <h3><i class="fas fa-newspaper"></i> Blog Posts Management</h3>
+                        <div class="section-actions">
+                            <button class="btn btn-primary" id="addPostBtn">
+                                <i class="fas fa-plus"></i> Add New Post
+                            </button>
+                        </div>
+                    </div>
+                    <div class="table-container">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Image</th>
+                                    <th>Title</th>
+                                    <th>Excerpt</th>
+                                    <th>Category</th>
+                                    <th>Status</th>
+                                    <th>Views</th>
+                                    <th>Date</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="postsTable">
+                                <tr>
+                                    <td colspan="8" class="loading">
+                                        <i class="fas fa-spinner fa-spin"></i>
+                                        Loading blog posts...
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Categories Content -->
+            <div id="categoriesContent" class="tab-content" style="display: none;">
+                <div class="content-section">
+                    <div class="section-header">
+                        <h3><i class="fas fa-tags"></i> Categories Management</h3>
+                        <div class="section-actions">
+                            <button class="btn btn-primary" id="addCategoryBtn">
+                                <i class="fas fa-plus"></i> Add Category
+                            </button>
+                        </div>
+                    </div>
+                    <div class="table-container">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Category Name</th>
+                                    <th>Slug</th>
+                                    <th>Posts Count</th>
+                                    <th>Status</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="categoriesTable">
+                                <tr>
+                                    <td colspan="5" class="loading">
+                                        <i class="fas fa-spinner fa-spin"></i>
+                                        Loading categories...
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Analytics Content -->
+            <div id="analyticsContent" class="tab-content" style="display: none;">
+                <div class="content-section">
+                    <div class="section-header">
+                        <h3><i class="fas fa-chart-bar"></i> Blog Analytics</h3>
+                    </div>
+                    <div class="table-container">
+                        <div style="padding: 40px; text-align: center; color: var(--text-secondary);">
+                            <i class="fas fa-chart-bar" style="font-size: 3rem; margin-bottom: 20px; color: var(--primary);"></i>
+                            <h3>Analytics Dashboard</h3>
+                            <p>Detailed analytics and insights will be displayed here</p>
+                            <p style="font-size: 0.9rem; margin-top: 10px;">Coming Soon...</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add Post Modal -->
+    <div id="postModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3><i class="fas fa-plus"></i> Add New Blog Post</h3>
+                <button class="close-modal">&times;</button>
+            </div>
+            <form id="postForm">
+                <div class="form-group">
+                    <label class="form-label">Post Title</label>
+                    <input type="text" id="postTitle" class="form-control" placeholder="Enter blog post title" required>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label">Category</label>
+                        <select id="postCategory" class="form-control" required>
+                            <option value="">Select Category</option>
+                            <option value="AI Tools">AI Tools</option>
+                            <option value="Tutorials">Tutorials</option>
+                            <option value="Reviews">Reviews</option>
+                            <option value="News">AI News</option>
+                            <option value="Productivity">Productivity</option>
+                            <option value="Content Creation">Content Creation</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Status</label>
+                        <select id="postStatus" class="form-control" required>
+                            <option value="published">Published</option>
+                            <option value="draft">Draft</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Featured Image URL</label>
+                    <input type="url" id="postImage" class="form-control" placeholder="Enter image URL" required>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Short Description (Excerpt)</label>
+                    <textarea id="postExcerpt" class="form-control" placeholder="Enter short description (2-3 lines)" required></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Full Content</label>
+                    <textarea id="postContent" class="form-control" placeholder="Enter full blog post content" rows="8" required></textarea>
+                </div>
+
+                <div class="form-group" style="display: flex; gap: 12px;">
+                    <button type="submit" class="btn btn-primary" style="flex: 1;">
+                        <i class="fas fa-save"></i> Publish Post
+                    </button>
+                    <button type="button" class="btn btn-danger close-modal" style="flex: 1;">
+                        <i class="fas fa-times"></i> Cancel
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Add Category Modal -->
+    <div id="categoryModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3><i class="fas fa-plus"></i> Add New Category</h3>
+                <button class="close-modal">&times;</button>
+            </div>
+            <form id="categoryForm">
+                <div class="form-group">
+                    <label class="form-label">Category Name</label>
+                    <input type="text" id="categoryName" class="form-control" placeholder="Enter category name" required>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">Category Slug</label>
+                    <input type="text" id="categorySlug" class="form-control" placeholder="Enter URL slug" required>
+                </div>
+
+                <div class="form-group" style="display: flex; gap: 12px;">
+                    <button type="submit" class="btn btn-primary" style="flex: 1;">
+                        <i class="fas fa-save"></i> Save Category
+                    </button>
+                    <button type="button" class="btn btn-danger close-modal" style="flex: 1;">
+                        <i class="fas fa-times"></i> Cancel
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // Firebase Configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyCEtGC6NgyOrlL1r6J7PJPg11dF8ybQK0E",
+            authDomain: "ai-mining-c0f85.firebaseapp.com",
+            projectId: "ai-mining-c0f85",
+            storageBucket: "ai-mining-c0f85.firebasestorage.app",
+            messagingSenderId: "227375514915",
+            appId: "1:227375514915:web:035e4925af6a495f42b896",
+            measurementId: "G-41VBZ2K6Y6"
+        };
+
+        // Initialize Firebase
+        firebase.initializeApp(firebaseConfig);
+        const auth = firebase.auth();
+        const db = firebase.firestore();
+
+        // DOM Elements
+        const loginScreen = document.getElementById('loginScreen');
+        const adminPanel = document.getElementById('adminPanel');
+        const loginForm = document.getElementById('loginForm');
+        const loginError = document.getElementById('loginError');
+        const logoutBtn = document.getElementById('logoutBtn');
+        const pageTitle = document.getElementById('pageTitle');
+        const userAvatar = document.getElementById('userAvatar');
+        const userName = document.getElementById('userName');
+        const userEmail = document.getElementById('userEmail');
+        const mobileMenuToggle = document.getElementById('mobileMenuToggle');
+        const sidebar = document.getElementById('sidebar');
+
+        // Tab Navigation
+        const navItems = document.querySelectorAll('.nav-item');
+        const tabContents = document.querySelectorAll('.tab-content');
+
+        // Mobile Menu Toggle
+        mobileMenuToggle.addEventListener('click', () => {
+            sidebar.classList.toggle('active');
+        });
+
+        // Firebase Authentication
+        loginForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const email = document.getElementById('loginEmail').value;
+            const password = document.getElementById('loginPassword').value;
+
+            try {
+                const userCredential = await auth.signInWithEmailAndPassword(email, password);
+                const user = userCredential.user;
+
+                // Show admin panel
+                loginScreen.style.display = 'none';
+                adminPanel.style.display = 'flex';
+
+                // Update user info
+                userName.textContent = user.displayName || 'Administrator';
+                userEmail.textContent = user.email;
+                userAvatar.textContent = user.displayName ? user.displayName.charAt(0).toUpperCase() : 'A';
+
+                // Load initial data
+                loadDashboardData();
+                loadBlogPosts();
+                loadCategories();
+
+            } catch (error) {
+                loginError.textContent = error.message;
+                loginError.style.display = 'block';
+            }
+        });
+
+        // Logout functionality
+        logoutBtn.addEventListener('click', () => {
+            auth.signOut().then(() => {
+                adminPanel.style.display = 'none';
+                loginScreen.style.display = 'flex';
+                loginForm.reset();
+                loginError.style.display = 'none';
+            });
+        });
+
+        // Tab switching
+        navItems.forEach(item => {
+            item.addEventListener('click', (e) => {
+                e.preventDefault();
+
+                // Remove active class from all items
+                navItems.forEach(nav => nav.classList.remove('active'));
+
+                // Add active class to clicked item
+                item.classList.add('active');
+
+                // Hide all tab contents
+                tabContents.forEach(content => content.style.display = 'none');
+
+                // Show selected tab content
+                const tabId = item.getAttribute('data-tab') + 'Content';
+                document.getElementById(tabId).style.display = 'block';
+
+                // Update page title
+                const tabName = item.getAttribute('data-tab');
+                pageTitle.textContent = tabName.charAt(0).toUpperCase() + tabName.slice(1) + ' Management';
+
+                // Close mobile menu on tab change
+                if (window.innerWidth <= 768) {
+                    sidebar.classList.remove('active');
+                }
+            });
+        });
+
+        // Modal functionality
+        const modals = document.querySelectorAll('.modal');
+        const closeButtons = document.querySelectorAll('.close-modal');
+
+        closeButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                modals.forEach(modal => modal.style.display = 'none');
+            });
+        });
+
+        // Add Post Modal
+        const addPostBtn = document.getElementById('addPostBtn');
+        const postModal = document.getElementById('postModal');
+        const postForm = document.getElementById('postForm');
+
+        addPostBtn?.addEventListener('click', () => {
+            postModal.style.display = 'block';
+            // Reset form to add mode
+            postForm.onsubmit = handlePostSubmit;
+            postForm.reset();
+        });
+
+        // Post Form Submit Handler
+        async function handlePostSubmit(e) {
+            e.preventDefault();
+
+            const postData = {
+                title: document.getElementById('postTitle').value,
+                category: document.getElementById('postCategory').value,
+                status: document.getElementById('postStatus').value,
+                image: document.getElementById('postImage').value,
+                excerpt: document.getElementById('postExcerpt').value,
+                content: document.getElementById('postContent').value,
+                views: 0,
+                date: new Date().toLocaleDateString(),
+                createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+                updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+            };
+
+            try {
+                await db.collection('blogPosts').add(postData);
+                postModal.style.display = 'none';
+                postForm.reset();
+                loadBlogPosts();
+                loadDashboardData();
+                alert('✅ Blog post published successfully!');
+            } catch (error) {
+                console.error('Error adding post:', error);
+                alert('❌ Error publishing post: ' + error.message);
+            }
+        }
+
+        // Assign the submit handler
+        postForm?.addEventListener('submit', handlePostSubmit);
+
+        // Add Category Modal
+        const addCategoryBtn = document.getElementById('addCategoryBtn');
+        const categoryModal = document.getElementById('categoryModal');
+        const categoryForm = document.getElementById('categoryForm');
+
+        addCategoryBtn?.addEventListener('click', () => {
+            categoryModal.style.display = 'block';
+            categoryForm.reset();
+        });
+
+        categoryForm?.addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const categoryData = {
+                name: document.getElementById('categoryName').value,
+                slug: document.getElementById('categorySlug').value,
+                postCount: 0,
+                createdAt: firebase.firestore.FieldValue.serverTimestamp()
+            };
+
+            try {
+                await db.collection('categories').add(categoryData);
+                categoryModal.style.display = 'none';
+                categoryForm.reset();
+                loadCategories();
+                alert('✅ Category added successfully!');
+            } catch (error) {
+                console.error('Error adding category:', error);
+                alert('❌ Error adding category: ' + error.message);
+            }
+        });
+
+        // Load Dashboard Data
+        async function loadDashboardData() {
+            try {
+                // Load total posts
+                const postsSnapshot = await db.collection('blogPosts').get();
+                document.getElementById('totalPosts').textContent = postsSnapshot.size;
+
+                // Load total views
+                let totalViews = 0;
+                postsSnapshot.forEach(doc => {
+                    const post = doc.data();
+                    totalViews += post.views || 0;
+                });
+                document.getElementById('totalViews').textContent = totalViews.toLocaleString();
+
+                // Load total categories
+                const categoriesSnapshot = await db.collection('categories').get();
+                document.getElementById('totalCategories').textContent = categoriesSnapshot.size;
+
+                // Load today's views (simplified)
+                document.getElementById('todayViews').textContent = Math.floor(totalViews / 30);
+
+                // Load recent posts
+                loadRecentPosts();
+
+            } catch (error) {
+                console.error('Error loading dashboard data:', error);
+            }
+        }
+
+        // Load Recent Posts
+        async function loadRecentPosts() {
+            const tableBody = document.getElementById('recentPostsTable');
+
+            try {
+                const snapshot = await db.collection('blogPosts')
+                    .orderBy('createdAt', 'desc')
+                    .limit(5)
+                    .get();
+
+                if (snapshot.empty) {
+                    tableBody.innerHTML = '<tr><td colspan="7" class="loading">No posts found</td></tr>';
+                    return;
+                }
+
+                tableBody.innerHTML = '';
+                snapshot.forEach(doc => {
+                    const post = doc.data();
+                    const row = createPostRow(post, doc.id);
+                    tableBody.appendChild(row);
+                });
+
+            } catch (error) {
+                console.error('Error loading recent posts:', error);
+                tableBody.innerHTML = '<tr><td colspan="7" class="loading">Error loading posts</td></tr>';
+            }
+        }
+
+        // Load All Blog Posts
+        async function loadBlogPosts() {
+            const tableBody = document.getElementById('postsTable');
+
+            try {
+                const snapshot = await db.collection('blogPosts')
+                    .orderBy('createdAt', 'desc')
+                    .get();
+
+                if (snapshot.empty) {
+                    tableBody.innerHTML = '<tr><td colspan="8" class="loading">No blog posts found</td></tr>';
+                    return;
+                }
+
+                tableBody.innerHTML = '';
+                snapshot.forEach(doc => {
+                    const post = doc.data();
+                    const row = createPostRow(post, doc.id, true);
+                    tableBody.appendChild(row);
+                });
+
+            } catch (error) {
+                console.error('Error loading blog posts:', error);
+                tableBody.innerHTML = '<tr><td colspan="8" class="loading">Error loading posts</td></tr>';
+            }
+        }
+
+        // Create Post Row
+        function createPostRow(post, postId, showExcerpt = false) {
+            const row = document.createElement('tr');
+
+            // Format date
+            const postDate = post.createdAt?.toDate();
+            const formattedDate = postDate ? postDate.toLocaleDateString() : 'N/A';
+
+            // Create status badge
+            const statusClass = post.status === 'published' ? 'status-published' : 'status-draft';
+            const statusText = post.status === 'published' ? 'Published' : 'Draft';
+
+            row.innerHTML = `
+                <td>
+                    <img src="${post.image || 'https://via.placeholder.com/50'}" 
+                         alt="${post.title}" 
+                         style="width: 50px; height: 50px; object-fit: cover; border-radius: 8px;">
+                </td>
+                <td style="font-weight: 600; max-width: 200px;">${post.title}</td>
+                ${showExcerpt ? `<td style="max-width: 250px;">${post.excerpt || 'No excerpt'}</td>` : ''}
+                <td><span class="category-badge">${post.category}</span></td>
+                <td><span class="status-badge ${statusClass}">${statusText}</span></td>
+                <td>${post.views || 0}</td>
+                <td>${formattedDate}</td>
+                <td>
+                    <button class="btn btn-warning btn-sm edit-post" data-id="${postId}">
+                        <i class="fas fa-edit"></i>
+                    </button>
+                    <button class="btn btn-danger btn-sm delete-post" data-id="${postId}">
+                        <i class="fas fa-trash"></i>
+                    </button>
+                </td>
+            `;
+
+            // Add event listeners for edit and delete
+            const editBtn = row.querySelector('.edit-post');
+            const deleteBtn = row.querySelector('.delete-post');
+
+            editBtn.addEventListener('click', () => editPost(postId, post));
+            deleteBtn.addEventListener('click', () => deletePost(postId));
+
+            return row;
+        }
+
+        // Edit Post
+        async function editPost(postId, post) {
+            // Fill the form with existing data
+            document.getElementById('postTitle').value = post.title;
+            document.getElementById('postCategory').value = post.category;
+            document.getElementById('postStatus').value = post.status;
+            document.getElementById('postImage').value = post.image;
+            document.getElementById('postExcerpt').value = post.excerpt;
+            document.getElementById('postContent').value = post.content;
+
+            // Change form to update mode
+            postForm.onsubmit = async (e) => {
+                e.preventDefault();
+
+                const updatedData = {
+                    title: document.getElementById('postTitle').value,
+                    category: document.getElementById('postCategory').value,
+                    status: document.getElementById('postStatus').value,
+                    image: document.getElementById('postImage').value,
+                    excerpt: document.getElementById('postExcerpt').value,
+                    content: document.getElementById('postContent').value,
+                    updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+                };
+
+                try {
+                    await db.collection('blogPosts').doc(postId).update(updatedData);
+                    postModal.style.display = 'none';
+                    postForm.reset();
+                    loadBlogPosts();
+                    loadRecentPosts();
+                    alert('✅ Blog post updated successfully!');
+                } catch (error) {
+                    console.error('Error updating post:', error);
+                    alert('❌ Error updating post: ' + error.message);
+                }
+            };
+
+            postModal.style.display = 'block';
+        }
+
+        // Delete Post
+        async function deletePost(postId) {
+            if (confirm('Are you sure you want to delete this blog post?')) {
+                try {
+                    await db.collection('blogPosts').doc(postId).delete();
+                    loadBlogPosts();
+                    loadRecentPosts();
+                    loadDashboardData();
+                    alert('✅ Blog post deleted successfully!');
+                } catch (error) {
+                    console.error('Error deleting post:', error);
+                    alert('❌ Error deleting post: ' + error.message);
+                }
+            }
+        }
+
+        // Load Categories
+        async function loadCategories() {
+            const tableBody = document.getElementById('categoriesTable');
+
+            try {
+                const snapshot = await db.collection('categories').get();
+
+                if (snapshot.empty) {
+                    tableBody.innerHTML = '<tr><td colspan="5" class="loading">No categories found</td></tr>';
+                    return;
+                }
+
+                tableBody.innerHTML = '';
+                snapshot.forEach(doc => {
+                    const category = doc.data();
+                    const row = createCategoryRow(category, doc.id);
+                    tableBody.appendChild(row);
+                });
+
+            } catch (error) {
+                console.error('Error loading categories:', error);
+                tableBody.innerHTML = '<tr><td colspan="5" class="loading">Error loading categories</td></tr>';
+            }
+        }
+
+        // Create Category Row
+        function createCategoryRow(category, categoryId) {
+            const row = document.createElement('tr');
+
+            row.innerHTML = `
+                <td style="font-weight: 600;">${category.name}</td>
+                <td>${category.slug}</td>
+                <td>${category.postCount || 0}</td>
+                <td><span class="status-badge status-published">Active</span></td>
+                <td>
+                    <button class="btn btn-danger btn-sm delete-category" data-id="${categoryId}">
+                        <i class="fas fa-trash"></i>
+                    </button>
+                </td>
+            `;
+
+            // Add event listener for delete
+            const deleteBtn = row.querySelector('.delete-category');
+            deleteBtn.addEventListener('click', () => deleteCategory(categoryId));
+
+            return row;
+        }
+
+        // Delete Category
+        async function deleteCategory(categoryId) {
+            if (confirm('Are you sure you want to delete this category?')) {
+                try {
+                    await db.collection('categories').doc(categoryId).delete();
+                    loadCategories();
+                    alert('✅ Category deleted successfully!');
+                } catch (error) {
+                    console.error('Error deleting category:', error);
+                    alert('❌ Error deleting category: ' + error.message);
+                }
+            }
+        }
+
+        // Initialize the admin panel
+        document.addEventListener('DOMContentLoaded', () => {
+            // Check if user is already logged in
+            auth.onAuthStateChanged(user => {
+                if (user) {
+                    loginScreen.style.display = 'none';
+                    adminPanel.style.display = 'flex';
+
+                    userName.textContent = user.displayName || 'Administrator';
+                    userEmail.textContent = user.email;
+                    userAvatar.textContent = user.displayName ? user.displayName.charAt(0).toUpperCase() : 'A';
+
+                    loadDashboardData();
+                    loadBlogPosts();
+                    loadCategories();
+                }
+            });
+        });
+    </script>
+</body>
+</html>
