@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://mralijaan690-lang.github.io/Ai-Tech-Blog.github.io/sitemap.xml
